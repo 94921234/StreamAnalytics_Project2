@@ -72,11 +72,12 @@ def read_parquet_blobs(client, prefix):
 def load_metrics(metric):
     client = get_blob_client()
     df = read_parquet_blobs(client, METRICS_PATH[metric])
-    st.write(metric, df.shape)
 
     for col in ["window_start", "window_end", "ws", "we"]:
         if col in df.columns:
             df[col] = pd.to_datetime(df[col], utc=True)
+    if not df.empty and "window_start" in df.columns:
+        df = df.sort_values("window_start")
 
     return df
 
