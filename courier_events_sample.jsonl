@@ -1,0 +1,12 @@
+{"event_id":"evt_101","event_time":1700000000500,"ingest_time":1700000000600,"courier_id":"courier_1","event_type":"COURIER_ONLINE","courier_status":"AVAILABLE","zone_id":"zone_1","order_id":null,"lat":40.41,"lon":-3.70,"vehicle_type":"BIKE"}
+{"event_id":"evt_102","event_time":1700000010000,"ingest_time":1700000010100,"courier_id":"courier_1","event_type":"COURIER_ASSIGNED","courier_status":"ASSIGNED","zone_id":"zone_1","order_id":"order_1","lat":null,"lon":null,"vehicle_type":"BIKE"}
+{"event_id":"evt_103","event_time":1700000012000,"ingest_time":1700000012100,"courier_id":"courier_1","event_type":"COURIER_LOCATION","courier_status":"PICKING_UP","zone_id":"zone_1","order_id":"order_1","lat":40.412,"lon":-3.702,"vehicle_type":"BIKE"}
+{"event_id":"evt_104","event_time":1700000016000,"ingest_time":1700000016100,"courier_id":"courier_1","event_type":"COURIER_ARRIVED_PICKUP","courier_status":"PICKING_UP","zone_id":"zone_1","order_id":"order_1","lat":null,"lon":null,"vehicle_type":"BIKE"}
+{"event_id":"evt_105","event_time":1700000025000,"ingest_time":1700000025100,"courier_id":"courier_1","event_type":"COURIER_ARRIVED_DROPOFF","courier_status":"DELIVERING","zone_id":"zone_1","order_id":"order_1","lat":null,"lon":null,"vehicle_type":"BIKE"}
+{"event_id":"evt_106","event_time":1700000032000,"ingest_time":1700000032100,"courier_id":"courier_1","event_type":"COURIER_OFFLINE","courier_status":"OFFLINE","zone_id":"zone_1","order_id":"order_1","lat":40.415,"lon":-3.705,"vehicle_type":"BIKE"}
+
+{"event_id":"evt_107","event_time":1700000100500,"ingest_time":1700000100600,"courier_id":"courier_2","event_type":"COURIER_ONLINE","courier_status":"AVAILABLE","zone_id":"zone_2","order_id":null,"lat":40.42,"lon":-3.71,"vehicle_type":"SCOOTER"}
+
+{"event_id":"evt_103","event_time":1700000012000,"ingest_time":1700000012200,"courier_id":"courier_1","event_type":"COURIER_LOCATION","courier_status":"PICKING_UP","zone_id":"zone_1","order_id":"order_1","lat":40.412,"lon":-3.702,"vehicle_type":"BIKE"}
+
+{"event_id":"evt_108","event_time":1700000011000,"ingest_time":1700000045000,"courier_id":"courier_1","event_type":"COURIER_LOCATION","courier_status":"DELIVERING","zone_id":"zone_1","order_id":"order_1","lat":40.50,"lon":-3.90,"vehicle_type":"BIKE"}

@@ -1,0 +1,15 @@
+{"event_id":"evt_1","event_time":1700000000000,"ingest_time":1700000000100,"order_id":"order_1","event_type":"ORDER_CREATED","order_status":"CREATED","restaurant_id":"rest_1","zone_id":"zone_1","courier_id":null,"order_value":20.0,"cancel_reason":null}
+{"event_id":"evt_2","event_time":1700000003000,"ingest_time":1700000003100,"order_id":"order_1","event_type":"ORDER_ACCEPTED","order_status":"ACCEPTED","restaurant_id":"rest_1","zone_id":"zone_1","courier_id":null,"order_value":20.0,"cancel_reason":null}
+{"event_id":"evt_3","event_time":1700000006000,"ingest_time":1700000006100,"order_id":"order_1","event_type":"PREP_STARTED","order_status":"PREPARING","restaurant_id":"rest_1","zone_id":"zone_1","courier_id":null,"order_value":20.0,"cancel_reason":null}
+{"event_id":"evt_4","event_time":1700000010000,"ingest_time":1700000010100,"order_id":"order_1","event_type":"READY_FOR_PICKUP","order_status":"READY","restaurant_id":"rest_1","zone_id":"zone_1","courier_id":null,"order_value":20.0,"cancel_reason":null}
+{"event_id":"evt_5","event_time":1700000015000,"ingest_time":1700000015100,"order_id":"order_1","event_type":"PICKED_UP","order_status":"PICKED_UP","restaurant_id":"rest_1","zone_id":"zone_1","courier_id":"courier_1","order_value":20.0,"cancel_reason":null}
+{"event_id":"evt_6","event_time":1700000030000,"ingest_time":1700000030100,"order_id":"order_1","event_type":"DELIVERED","order_status":"DELIVERED","restaurant_id":"rest_1","zone_id":"zone_1","courier_id":"courier_1","order_value":20.0,"cancel_reason":null}
+
+{"event_id":"evt_7","event_time":1700000100000,"ingest_time":1700000100100,"order_id":"order_2","event_type":"ORDER_CREATED","order_status":"CREATED","restaurant_id":"rest_2","zone_id":"zone_2","courier_id":null,"order_value":15.0,"cancel_reason":null}
+{"event_id":"evt_8","event_time":1700000102000,"ingest_time":1700000102100,"order_id":"order_2","event_type":"CANCELLED","order_status":"CANCELLED","restaurant_id":"rest_2","zone_id":"zone_2","courier_id":null,"order_value":15.0,"cancel_reason":"NO_COURIER_FOUND"}
+
+{"event_id":"evt_9","event_time":1700000200000,"ingest_time":1700000200100,"order_id":"order_3","event_type":"DELIVERED","order_status":"DELIVERED","restaurant_id":"rest_3","zone_id":"zone_3","courier_id":"courier_2","order_value":12.0,"cancel_reason":null}
+
+{"event_id":"evt_4","event_time":1700000010000,"ingest_time":1700000010200,"order_id":"order_1","event_type":"READY_FOR_PICKUP","order_status":"READY","restaurant_id":"rest_1","zone_id":"zone_1","courier_id":null,"order_value":20.0,"cancel_reason":null}
+
+{"event_id":"evt_10","event_time":1700000014000,"ingest_time":1700000040000,"order_id":"order_1","event_type":"PICKED_UP","order_status":"PICKED_UP","restaurant_id":"rest_1","zone_id":"zone_1","courier_id":"courier_1","order_value":20.0,"cancel_reason":null}
