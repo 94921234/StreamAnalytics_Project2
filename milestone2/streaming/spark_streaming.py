@@ -42,13 +42,13 @@ EH_CONN_STR = os.getenv("EVENTHUB_CONNECTION_STRING", "").strip()
 STORAGE_KEY = os.getenv("STORAGE_ACCOUNT_KEY", "").strip()
 
 BASE = f"wasbs://{CONTAINER}@{STORAGE_ACCOUNT}.blob.core.windows.net"
-CKPT = f"{BASE}/checkpoints"
+CKPT = f"{BASE}/checkpoints_debug_uc1_uc2"
 
-WATERMARK_DELAY = "10 minutes"
-WIN = "30 seconds"
-BASELINE_WIN = "10 minutes"
+WATERMARK_DELAY = "1 minute"
+WIN = "15 seconds"
+BASELINE_WIN = "2 minutes"
 
-SURGE_THRESHOLD = 1.2
+SURGE_THRESHOLD = 1.5
 IDLE_UTIL_THRESHOLD = 0.5
 PRICING_ANOMALY_THRESHOLD = 1.25
 
@@ -112,9 +112,10 @@ def read_orders(spark: SparkSession):
         .select(F.from_json(F.col("body").cast("string"), ORDER_SCHEMA).alias("d"))
         .select("d.*")
         .filter(F.col("event_id").isNotNull())
-        .withColumn("event_time",F.to_timestamp("event_time"))
-        .withColumn("ingest_time",F.to_timestamp("ingest_time"))
+        .withColumn("event_time", F.to_timestamp("event_time"))
+        .withColumn("ingest_time", F.to_timestamp("ingest_time"))
         .withWatermark("event_time", WATERMARK_DELAY)
+        .dropDuplicates(["event_id"])
     )
 
 def read_couriers(spark: SparkSession):
@@ -131,8 +132,9 @@ def read_couriers(spark: SparkSession):
         .select("d.*")
         .filter(F.col("event_id").isNotNull())
         .withColumn("event_time", F.to_timestamp("event_time"))
-        .withColumn("ingest_time",F.to_timestamp("ingest_time"))
+        .withColumn("ingest_time", F.to_timestamp("ingest_time"))
         .withWatermark("event_time", WATERMARK_DELAY)
+        .dropDuplicates(["event_id"])
     )
 
 # ── Raw sinks (data at rest) ────────────────────────────────────────────
@@ -171,8 +173,10 @@ def uc1(orders):
     return (
         agg.writeStream
         .format("parquet")
-        .option("path", f"{BASE}/metrics/uc1/")
+        .option("path", f"{BASE}/metrics_test/uc1/")
         .option("checkpointLocation", f"{CKPT}/uc1/")
+        #.option("path", f"{BASE}/metrics/uc1/")
+        #.option("checkpointLocation", f"{CKPT}/uc1/")
         .outputMode("append")
         .start()
     )
@@ -192,7 +196,7 @@ def uc2(orders, couriers):
 
     supply_stream = (
         couriers
-        .filter(F.col("courier_status").isin(["ONLINE", "AVAILABLE"]))
+        .filter(F.col("courier_status") == "ONLINE")
         .select(
             "event_time",
             "zone_id",
@@ -245,7 +249,7 @@ def uc2b(orders, couriers):
 
     available_stream = (
         couriers
-        .filter(F.col("courier_status").isin(["ONLINE", "AVAILABLE"]))
+        .filter(F.col("courier_status") == "ONLINE")
         .select(
             "event_time",
             "zone_id",
@@ -320,7 +324,7 @@ def uc3(orders, couriers):
 
     supply_stream = (
         couriers
-        .filter(F.col("courier_status").isin(["ONLINE", "AVAILABLE"]))
+        .filter(F.col("courier_status") == "ONLINE")
         .select(
             "event_time",
             "zone_id",
@@ -400,7 +404,11 @@ def uc3b(orders):
 
     anomalies = (
         current
-        .join(baseline, on=["window_end", "zone_id"], how="inner")
+        .join(baseline, on=["window_end", "zone_id"], how="left")
+        .withColumn(
+            "baseline_avg_order_value",
+            F.coalesce(F.col("baseline_avg_order_value"), F.col("current_avg_order_value"))
+        )
         .withColumn(
             "baseline_safe",
             F.when(F.col("baseline_avg_order_value") == 0, F.lit(0.001))
@@ -450,17 +458,36 @@ def main():
     orders = read_orders(spark)
     couriers = read_couriers(spark)
 
-    sink_parquet(orders, "orders")
-    sink_parquet(couriers, "couriers")
+    # Disable everything except ONE query
+    q = uc2(orders, couriers)
 
-    uc1(orders)
-    uc2(orders, couriers)
-    uc2b(orders, couriers)
-    uc3(orders, couriers)
-    uc3b(orders)
+    print("[Streaming] Only UC2 running. Awaiting termination ...")
+    q.awaitTermination()
 
-    print("[Streaming] All queries running. Awaiting termination ...")
-    spark.streams.awaitAnyTermination()
+#def main():
+#    if not EH_CONN_STR:
+#        raise ValueError("EVENTHUB_CONNECTION_STRING is not set")
+#
+#    if not STORAGE_KEY:
+#        raise ValueError("STORAGE_ACCOUNT_KEY is not set")
+#
+#    spark = create_spark()
+#    spark.sparkContext.setLogLevel("WARN")
+#    orders = read_orders(spark)
+#    couriers = read_couriers(spark)
+#
+#    sink_parquet(orders, "orders")
+#    sink_parquet(couriers, "couriers")
+#
+#    uc1(orders)
+#    uc2(orders, couriers)
+#    uc2b(orders, couriers)
+#    uc3(orders, couriers)
+    #uc3b(orders) temporarily disabled due to Spark Structured Streaming stream-stream join constraints. 
+    ##            In production, we would implement it using Delta Live Tables or batch baseline tables.
+
+    #print("[Streaming] All queries running. Awaiting termination ...")
+    #spark.streams.awaitAnyTermination()
 
 if __name__ == "__main__":
     main()
