@@ -105,14 +105,22 @@ def stream_live(producers: dict, interval: float = 1.0) -> None:
     sent = 0
 
     try:
+        batch = []
+        batch_size = 25
         for event in all_events:
-            send_event(producers, event)
-            sent += 1
-
-            if sent % 50 == 0:
-                print(f"Sent {sent} events...")
-
-            time.sleep(interval)
+            batch.append(event)
+            
+            if len(batch) >= batch_size:
+                send_batch(producers, batch)
+                sent += len(batch)
+                batch = []
+                
+                if sent % 100 == 0:
+                    print(f"Sent {sent} events...")
+                time.sleep(interval)
+        if batch:
+            send_batch(producers, batch)
+            sent += len(batch)
 
     except KeyboardInterrupt:
         print(f"Stopped. Total sent: {sent}")
