@@ -1,0 +1,72 @@
+{
+  "type": "record",
+  "name": "OrderEvent",
+  "namespace": "ubereats.streamanalytics",
+  "doc": "Order lifecycle events for Uber Eats simulation",
+  "fields": [
+    { "name": "event_id", "type": "string" },
+    { "name": "event_time", "type": "long" },
+    { "name": "ingest_time", "type": "long" },
+
+    { "name": "order_id", "type": "string" },
+
+    {
+      "name": "event_type",
+      "type": {
+        "type": "enum",
+        "name": "OrderEventType",
+        "symbols": [
+          "ORDER_CREATED",
+          "ORDER_ACCEPTED",
+          "PREP_STARTED",
+          "READY_FOR_PICKUP",
+          "PICKED_UP",
+          "DELIVERED",
+          "CANCELLED"
+        ]
+      }
+    },
+
+    {
+      "name": "order_status",
+      "type": {
+        "type": "enum",
+        "name": "OrderStatus",
+        "symbols": [
+          "CREATED",
+          "ACCEPTED",
+          "PREPARING",
+          "READY",
+          "PICKED_UP",
+          "DELIVERED",
+          "CANCELLED"
+        ]
+      }
+    },
+
+    { "name": "restaurant_id", "type": "string" },
+    { "name": "zone_id", "type": "string" },
+    { "name": "courier_id", "type": ["null", "string"], "default": null },
+
+    { "name": "order_value", "type": "double" },
+
+    {
+      "name": "cancel_reason",
+      "type": [
+        "null",
+        {
+          "type": "enum",
+          "name": "CancelReason",
+          "symbols": [
+            "CHANGED_MIND",
+            "RESTAURANT_DELAY",
+            "NO_COURIER_FOUND",
+            "COURIER_CANCELLED",
+            "OTHER"
+          ]
+        }
+      ],
+      "default": null
+    }
+  ]
+}

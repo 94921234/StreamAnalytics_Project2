@@ -1,0 +1,59 @@
+{
+  "type": "record",
+  "name": "CourierEvent",
+  "namespace": "ubereats.streamanalytics",
+  "doc": "Courier availability and movement events for Uber Eats simulation",
+  "fields": [
+    { "name": "event_id", "type": "string" },
+    { "name": "event_time", "type": "long" },
+    { "name": "ingest_time", "type": "long" },
+
+    { "name": "courier_id", "type": "string" },
+
+    {
+      "name": "event_type",
+      "type": {
+        "type": "enum",
+        "name": "CourierEventType",
+        "symbols": [
+          "COURIER_ONLINE",
+          "COURIER_OFFLINE",
+          "COURIER_ASSIGNED",
+          "COURIER_ARRIVED_PICKUP",
+          "COURIER_ARRIVED_DROPOFF",
+          "COURIER_LOCATION"
+        ]
+      }
+    },
+
+    {
+      "name": "courier_status",
+      "type": {
+        "type": "enum",
+        "name": "CourierStatus",
+        "symbols": [
+          "ONLINE",
+          "OFFLINE",
+          "AVAILABLE",
+          "ASSIGNED",
+          "PICKING_UP",
+          "DELIVERING"
+        ]
+      }
+    },
+
+    { "name": "zone_id", "type": "string" },
+    { "name": "order_id", "type": ["null", "string"], "default": null },
+    { "name": "lat", "type": ["null", "double"], "default": null },
+    { "name": "lon", "type": ["null", "double"], "default": null },
+
+    {
+      "name": "vehicle_type",
+      "type": {
+        "type": "enum",
+        "name": "VehicleType",
+        "symbols": ["BIKE", "SCOOTER", "CAR"]
+      }
+    }
+  ]
+}
